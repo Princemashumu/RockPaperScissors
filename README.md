@@ -15,11 +15,11 @@ To run this project, you need to have [ASP.NET Core](https://dotnet.microsoft.co
 
 1. Clone the repository:
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/Princemashumu/RockPaperScissors.git
     ```
 2. Navigate to the project folder:
     ```bash
-    cd <project-folder>
+    cd RockPaperScissors
     ```
 3. Build and run the project:
     ```bash
