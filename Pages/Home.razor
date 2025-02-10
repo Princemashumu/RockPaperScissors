@@ -1,0 +1,113 @@
+﻿@page "/"
+@using System
+
+<PageTitle>Rock-Paper-Scissors Game</PageTitle>
+
+<div class="container mt-4">
+    <h3 class="mb-4">Welcome to Rock-Paper-Scissors!</h3>
+    
+    <div class="mb-4">
+        <p class="mb-3">Choose your move:</p>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" @onclick="() => PlayGame(Choices.Rock)">Rock</button>
+            <button class="btn btn-primary" @onclick="() => PlayGame(Choices.Paper)">Paper</button>
+            <button class="btn btn-primary" @onclick="() => PlayGame(Choices.Scissors)">Scissors</button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(userChoice))
+    {
+        <div class="game-result mb-4">
+            <p>Your choice: <strong>@userChoice</strong></p>
+            <p>Computer's choice: <strong>@computerChoice</strong></p>
+            <p class="@GetResultClass()">@resultMessage</p>
+        </div>
+    }
+
+    <div class="score-board">
+        <h4>Score:</h4>
+        <div class="d-flex gap-4">
+            <p>You: <strong>@userScore</strong></p>
+            <p>Computer: <strong>@computerScore</strong></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .game-result {
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 0.5rem;
+    }
+    
+    .result-win {
+        color: #198754;
+        font-weight: bold;
+    }
+    
+    .result-lose {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    
+    .result-tie {
+        color: #6c757d;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    private enum Choices
+    {
+        Rock,
+        Paper,
+        Scissors
+    }
+
+    private string userChoice = string.Empty;
+    private string computerChoice = string.Empty;
+    private string resultMessage = string.Empty;
+    private int userScore = 0;
+    private int computerScore = 0;
+    private readonly Random rand = new();
+
+    private void PlayGame(Choices choice)
+    {
+        userChoice = choice.ToString().ToLower();
+        var computerChoiceEnum = (Choices)rand.Next(3);
+        computerChoice = computerChoiceEnum.ToString().ToLower();
+
+        DetermineWinner(choice, computerChoiceEnum);
+    }
+
+    private void DetermineWinner(Choices userChoice, Choices computerChoice)
+    {
+        if (userChoice == computerChoice)
+        {
+            resultMessage = "It's a tie!";
+            return;
+        }
+
+        bool userWins = (userChoice == Choices.Rock && computerChoice == Choices.Scissors) ||
+                       (userChoice == Choices.Paper && computerChoice == Choices.Rock) ||
+                       (userChoice == Choices.Scissors && computerChoice == Choices.Paper);
+
+        if (userWins)
+        {
+            resultMessage = "You win!";
+            userScore++;
+        }
+        else
+        {
+            resultMessage = "Computer wins!";
+            computerScore++;
+        }
+    }
+
+    private string GetResultClass() => resultMessage switch
+    {
+        "You win!" => "result-win",
+        "Computer wins!" => "result-lose",
+        _ => "result-tie"
+    };
+}
